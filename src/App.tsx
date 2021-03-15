@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
-import { RootState } from "store";
 import { useSelector, useDispatch } from "react-redux";
 import BingoBoard from "components/BingoBoard";
 import CompleteBoard from "components/CompleteBoard";
 import ResultModal from "components/ResultModal";
 import { startGame, endGame } from "store/bingo";
 import { Ibingo, Ibingocell } from "interfaces";
+import { RootState } from "store";
 import { BINGO_ANSWER } from "constants/index";
 
 interface Icompleted {
@@ -45,7 +45,6 @@ function App() {
 
   const resetGame = useCallback(() => {
     dispatch(endGame());
-    // dispatch(endTurn());
     setCompleted({ 1: [], 2: [] });
     setIsGameStarted(false);
     setWinner(0);

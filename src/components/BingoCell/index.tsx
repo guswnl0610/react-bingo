@@ -1,9 +1,9 @@
 import React, { memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { Ibingocell, Ibingo } from "interfaces";
 import { selectNumber } from "store/bingo";
 import { RootState } from "store";
+import { Ibingocell, Ibingo } from "interfaces";
 
 interface IBingoCell {
   cell: Ibingocell | null;
