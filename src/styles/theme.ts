@@ -3,4 +3,5 @@ export const theme = {
   darkgray: "#9e9e9e",
   gray: "#bdbdbd",
   primary: "#eb0359",
+  primary_light: "#f381ac",
 };

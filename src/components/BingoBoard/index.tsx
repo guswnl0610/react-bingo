@@ -2,21 +2,36 @@ import React, { memo } from "react";
 import styled from "styled-components";
 import BingoCell from "components/BingoCell";
 import { Ibingocell } from "interfaces";
+import { BINGO_ANSWER } from "constants/index";
 
 interface IBingoBoard {
   board: Ibingocell[][] | null[][];
   player: string;
+  completed: number[];
   onCellClick: (player: string, cell: Ibingocell | null) => void;
 }
 
-function BingoBoard({ board, player, onCellClick }: IBingoBoard) {
+interface Ipaintedcell extends Ibingocell {
+  isCompleted?: boolean;
+}
+
+function BingoBoard({ board, player, onCellClick, completed }: IBingoBoard) {
+  const paintCompletedLines = (_board: Ibingocell[][] | null[][]) => {
+    const flatted: (Ipaintedcell | null)[] = _board.flatMap((val: Ibingocell[] | null[]) => val);
+    if (!flatted[0]) return flatted;
+    completed.forEach((completedLineidx: number) => {
+      BINGO_ANSWER.indexes[completedLineidx].forEach((idx) => {
+        flatted[idx]!.isCompleted = true;
+      });
+    });
+    return flatted;
+  };
+
   return (
     <BingoBoardWrapper>
-      {board.map((cellrow: Ibingocell[] | null[]) =>
-        cellrow.map((cell: Ibingocell | null, idx: number) => {
-          return <BingoCell key={idx} cell={cell} player={player} onCellClick={onCellClick} />;
-        })
-      )}
+      {paintCompletedLines(board).map((cell, idx) => (
+        <BingoCell key={idx} cell={cell} player={player} onCellClick={onCellClick} isCompleted={!!cell?.isCompleted} />
+      ))}
     </BingoBoardWrapper>
   );
 }
