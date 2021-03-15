@@ -25,6 +25,7 @@ export const endGame = () => {
 };
 
 const INITIAL_STATE: Ibingo = {
+  turn: 0,
   1: Array.from(new Array(5), () => new Array(5).fill(null)),
   2: Array.from(new Array(5), () => new Array(5).fill(null)),
 };
@@ -34,16 +35,17 @@ export const bingoReducer = (state: Ibingo = INITIAL_STATE, action: { type: stri
     case BINGO_SELECT_NUMBER:
       const new1pBingoBoard = [...state[1]];
       const new2pBingoBoard = [...state[2]];
+      const turn = state.turn === 1 ? 2 : 1;
       for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 5; j++) {
           if (new1pBingoBoard[i][j]!.num === action.payload) new1pBingoBoard[i][j]!.isSelected = true;
           if (new2pBingoBoard[i][j]!.num === action.payload) new2pBingoBoard[i][j]!.isSelected = true;
         }
       }
-      return { 1: new1pBingoBoard, 2: new2pBingoBoard };
+      return { 1: new1pBingoBoard, 2: new2pBingoBoard, turn };
     case BINGO_START_GAME:
       const bingoNumbers = Array.from(new Array(25), (_, i: number) => i + 1);
-      const newState = {} as Ibingo;
+      const newState = { turn: 1 } as Ibingo;
       for (let player = 1; player <= 2; player++) {
         const shuffled = shuffleArray(bingoNumbers);
         const bingoCells = shuffled.map((num: number) => {

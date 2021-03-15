@@ -6,7 +6,6 @@ import BingoBoard from "components/BingoBoard";
 import CompleteBoard from "components/CompleteBoard";
 import ResultModal from "components/ResultModal";
 import { startGame, endGame } from "store/bingo";
-import { initTurn, endTurn } from "store/turn";
 import { Ibingo, Ibingocell } from "interfaces";
 import { BINGO_ANSWER } from "constants/index";
 
@@ -21,12 +20,10 @@ function App() {
   const [winner, setWinner] = useState<number>(0);
   const [completed, setCompleted] = useState<Icompleted>({ 1: [], 2: [] });
   const bingoStatus: Ibingo = useSelector((state: RootState) => state.bingoReducer);
-  const turn = useSelector((state: RootState) => state.turnReducer);
   const dispatch = useDispatch();
 
   const handleStartClick = useCallback(() => {
     dispatch(startGame());
-    dispatch(initTurn());
     setIsGameStarted(true);
     setCompleted({ 1: [], 2: [] });
   }, []);
@@ -48,7 +45,7 @@ function App() {
 
   const resetGame = useCallback(() => {
     dispatch(endGame());
-    dispatch(endTurn());
+    // dispatch(endTurn());
     setCompleted({ 1: [], 2: [] });
     setIsGameStarted(false);
     setWinner(0);
@@ -65,19 +62,23 @@ function App() {
 
   useEffect(() => {
     if (!(completed[1].length >= 5 || completed[2].length >= 5)) return;
-    if (completed[1].length > completed[2].length) setWinner(1);
+    if (completed[1].length >= 5 && completed[2].length >= 5) setWinner(3);
     else if (completed[1].length < completed[2].length) setWinner(2);
-    else setWinner(3);
+    else setWinner(1);
   }, [completed]);
 
   return (
     <FlexColWrapper>
       <GameStartButton onClick={handleStartClick}>{isGameStarted ? "게임 재시작" : "게임 시작"}</GameStartButton>
       <BoardWrapper>
-        {Object.keys(bingoStatus).map((player) => (
+        {["1", "2"].map((player) => (
           <FlexColWrapper key={player}>
-            <PlayerIdentifier currentTurn={Number(player) === turn}>{player}P</PlayerIdentifier>
-            <BingoBoard board={bingoStatus[player]} player={player} completed={completed[player]} />
+            <PlayerIdentifier currentTurn={Number(player) === bingoStatus.turn}>{player}P</PlayerIdentifier>
+            <BingoBoard
+              board={bingoStatus[player] as null[][] | Ibingocell[][]}
+              player={player}
+              completed={completed[player]}
+            />
             <CompleteBoard labels={getCompletedLabels(completed[player])} />
           </FlexColWrapper>
         ))}

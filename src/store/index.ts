@@ -1,8 +1,7 @@
 import { combineReducers } from "redux";
 import { bingoReducer } from "store/bingo";
-import { turnReducer } from "store/turn";
 
-const rootReducer = combineReducers({ bingoReducer, turnReducer });
+const rootReducer = combineReducers({ bingoReducer });
 
 export default rootReducer;
 
