@@ -8,14 +8,13 @@ interface IBingoBoard {
   board: Ibingocell[][] | null[][];
   player: string;
   completed: number[];
-  onCellClick: (player: string, cell: Ibingocell | null) => void;
 }
 
 interface Ipaintedcell extends Ibingocell {
   isCompleted?: boolean;
 }
 
-function BingoBoard({ board, player, onCellClick, completed }: IBingoBoard) {
+function BingoBoard({ board, player, completed }: IBingoBoard) {
   const paintCompletedLines = (_board: Ibingocell[][] | null[][]) => {
     const flatted: (Ipaintedcell | null)[] = _board.flatMap((val: Ibingocell[] | null[]) => val);
     if (!flatted[0]) return flatted;
@@ -30,7 +29,7 @@ function BingoBoard({ board, player, onCellClick, completed }: IBingoBoard) {
   return (
     <BingoBoardWrapper>
       {paintCompletedLines(board).map((cell, idx) => (
-        <BingoCell key={idx} cell={cell} player={player} onCellClick={onCellClick} isCompleted={!!cell?.isCompleted} />
+        <BingoCell key={idx} cell={cell} player={player} isCompleted={!!cell?.isCompleted} />
       ))}
     </BingoBoardWrapper>
   );
