@@ -17,7 +17,7 @@ function BingoCell({ cell, player, isCompleted }: IBingoCell) {
 
   const handleCellClick = () => {
     if (!cell || cell.isSelected) return;
-    if (bingoStatus.turn !== Number(player)) return alert("잘못된 차례입니다");
+    if (!bingoStatus[player].isTurn) return alert("잘못된 차례입니다");
     dispatch(selectNumber(cell.num));
   };
 

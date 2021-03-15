@@ -1,8 +1,13 @@
 export interface Ibingo {
-  [k: string]: null[][] | Ibingocell[][] | number;
-  turn: number;
-  1: null[][] | Ibingocell[][];
-  2: null[][] | Ibingocell[][];
+  [k: string]: Ibingoplayer;
+  1: Ibingoplayer;
+  2: Ibingoplayer;
+}
+
+export interface Ibingoplayer {
+  isTurn: boolean;
+  board: null[][] | Ibingocell[][];
+  completed: number[];
 }
 
 export interface Ibingocell {
