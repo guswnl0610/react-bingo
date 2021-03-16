@@ -1,14 +1,23 @@
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
+import { RootState } from "store";
+import { BINGO_ANSWER } from "constants/index";
 
 interface ICompleteBoard {
-  labels: string[];
+  player: string;
 }
 
-function CompleteBoard({ labels }: ICompleteBoard) {
+function CompleteBoard({ player }: ICompleteBoard) {
+  const bingoStatus = useSelector((state: RootState) => state.bingoReducer);
+
+  const getCompletedLabels = useCallback((_completed: number[]): string[] => {
+    return _completed.map((index) => BINGO_ANSWER.labels[index]);
+  }, []);
+
   return (
     <>
-      {labels.map((label, idx) => (
+      {getCompletedLabels(bingoStatus[player].completed).map((label, idx) => (
         <CompletedLine key={idx}>{label}</CompletedLine>
       ))}
     </>

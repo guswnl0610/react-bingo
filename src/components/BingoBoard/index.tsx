@@ -1,24 +1,26 @@
 import React, { memo } from "react";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
+import { RootState } from "store";
 import BingoCell from "components/BingoCell";
 import { Ibingocell } from "interfaces";
 import { BINGO_ANSWER } from "constants/index";
 
 interface IBingoBoard {
-  board: Ibingocell[][] | null[][];
   player: string;
-  completed: number[];
 }
 
 interface Ipaintedcell extends Ibingocell {
   isCompleted?: boolean;
 }
 
-function BingoBoard({ board, player, completed }: IBingoBoard) {
-  const paintCompletedLines = (_board: Ibingocell[][] | null[][]) => {
+function BingoBoard({ player }: IBingoBoard) {
+  const bingoStatus = useSelector((state: RootState) => state.bingoReducer);
+
+  const paintCompletedLines = (_board: Ibingocell[][] | null[][], _completed: number[]) => {
     const flatted: (Ipaintedcell | null)[] = _board.flatMap((val: Ibingocell[] | null[]) => val);
     if (!flatted[0]) return flatted;
-    completed.forEach((completedLineidx: number) => {
+    _completed.forEach((completedLineidx: number) => {
       BINGO_ANSWER.indexes[completedLineidx].forEach((idx) => {
         flatted[idx]!.isCompleted = true;
       });
@@ -28,7 +30,7 @@ function BingoBoard({ board, player, completed }: IBingoBoard) {
 
   return (
     <BingoBoardWrapper>
-      {paintCompletedLines(board).map((cell, idx) => (
+      {paintCompletedLines(bingoStatus[player].board, bingoStatus[player].completed).map((cell, idx) => (
         <BingoCell key={idx} cell={cell} player={player} isCompleted={!!cell?.isCompleted} />
       ))}
     </BingoBoardWrapper>

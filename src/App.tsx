@@ -5,9 +5,8 @@ import BingoBoard from "components/BingoBoard";
 import CompleteBoard from "components/CompleteBoard";
 import ResultModal from "components/ResultModal";
 import { startGame, endGame } from "store/bingo";
-import { Ibingo, Ibingocell } from "interfaces";
+import { Ibingo } from "interfaces";
 import { RootState } from "store";
-import { BINGO_ANSWER } from "constants/index";
 
 function App() {
   const [isGameStarted, setIsGameStarted] = useState<boolean>(false);
@@ -18,10 +17,6 @@ function App() {
   const handleStartClick = useCallback(() => {
     dispatch(startGame());
     setIsGameStarted(true);
-  }, []);
-
-  const getCompletedLabels = useCallback((_completed: number[]): string[] => {
-    return _completed.map((index) => BINGO_ANSWER.labels[index]);
   }, []);
 
   const resetGame = useCallback(() => {
@@ -47,12 +42,8 @@ function App() {
         {Object.keys(bingoStatus).map((player) => (
           <FlexColWrapper key={player}>
             <PlayerIdentifier currentTurn={bingoStatus[player].isTurn}>{player}P</PlayerIdentifier>
-            <BingoBoard
-              board={bingoStatus[player].board as null[][] | Ibingocell[][]}
-              player={player}
-              completed={bingoStatus[player].completed}
-            />
-            <CompleteBoard labels={getCompletedLabels(bingoStatus[player].completed)} />
+            <BingoBoard player={player} />
+            <CompleteBoard player={player} />
           </FlexColWrapper>
         ))}
       </BoardWrapper>
